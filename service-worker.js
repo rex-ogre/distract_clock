@@ -1,9 +1,26 @@
+import {focused, genericOnClick, linstenOninstalled}from './script/context_menu.js';
+
+chrome.contextMenus.onClicked.addListener(genericOnClick);
+linstenOninstalled();
 //變數
-var currentTabId = null; // 存儲當前活動的 tab 的 ID
+let focusId = null
+let currentTabId = null // 存儲當前活動的 tab 的 ID
 let timer = 0
-let port = null;
+let port = null
 let intervalID = null
-var hasTimerStart = false
+let hasTimerStart = false
+
+Object.defineProperty(chrome.windows, 'focused', {
+  get: getMyVariable,
+  set: setMyVariable
+});
+function getMyVariable() {
+  return focused;
+}
+
+function setMyVariable(value) {
+  focusId = currentTabId
+}
 
 // 監聽 active tab 切換事件
 chrome.tabs.onActivated.addListener(function(activeInfo) {
@@ -37,7 +54,6 @@ function connectToCurrentTab() {
     port.postMessage({msg:timer})
   
 }
-
 
 // 當tab跳轉到網頁時開始計時
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {  
