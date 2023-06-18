@@ -1,0 +1,26 @@
+{
+  "name": "Tab Capture Example",
+  "description": "Capture a tab and play in a <video> element in a separate window.",
+  "version": "1",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "permissions": ["tabs", "tabCapture", "activeTab"],
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "css": ["index.css"],
+      "matches": ["https://*/*",
+      "http://*/*"
+    ]
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["https://*/*"]
+  }
+
+}
