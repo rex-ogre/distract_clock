@@ -1,0 +1,65 @@
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      // transform: scale(0.5);
+      transform: translateY(200%);
+    }
+    to {
+      opacity: 1;
+      // transform: scale(1);
+      transform: translateY(100%);
+    }
+  }
+
+  .bubble_body {
+    top: 5vh;
+    right: 1vh;
+    position: fixed;
+    display: flex;
+    flex-direction: column; 
+    margin: 0;
+    place-content: center;
+    gap: 20px;
+    font-family: system-ui, sans-serif;
+    font-size: 20px;
+  }
+  .bubble {
+    --r: 25px; /* the radius */
+    --t: 30px; /* the size of the tail */
+    animation: fadeIn 3s ease forwards;
+    max-width: 300px;
+    padding: calc(2*var(--r)/3);
+    -webkit-mask: 
+      radial-gradient(var(--t) at var(--_d) 0,#0000 98%,#000 102%) 
+        var(--_d) 100%/calc(100% - var(--r)) var(--t) no-repeat,
+      conic-gradient(at var(--r) var(--r),#000 75%,#0000 0) 
+        calc(var(--r)/-2) calc(var(--r)/-2) padding-box, 
+      radial-gradient(50% 50%,#000 98%,#0000 101%) 
+        0 0/var(--r) var(--r) space padding-box;
+    background: blue;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    height: 100vh; 
+  }
+  .left {
+    --_d: 0%;
+    border-left: var(--t) solid #0000;
+    margin-right: var(--t);
+    place-self: start;
+  }
+  .right {
+    --_d: 100%;
+    border-right: var(--t) solid #0000;
+    height: 5vh;
+    z-index: 999;
+  }
+  .content {
+    text-align: center;
+  }
+  
+  
+  

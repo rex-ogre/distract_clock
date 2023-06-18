@@ -9,11 +9,11 @@
   "background": {
     "service_worker": "service-worker.js"
   },
-  "permissions": ["tabs", "tabCapture", "activeTab"],
+  "permissions": ["tabs", "tabCapture", "activeTab","webNavigation"],
   "content_scripts": [
     {
       "js": ["content.js"],
-      "css": ["index.css"],
+      "css": ["index.scss"],
       "matches": ["https://*/*",
       "http://*/*"
     ]

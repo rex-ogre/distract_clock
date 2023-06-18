@@ -1,4 +1,3 @@
-// 在 background.js 中
 //變數
 var currentTabId = null; // 存儲當前活動的 tab 的 ID
 let timer = 0
@@ -8,7 +7,6 @@ var hasTimerStart = false
 
 // 監聽 active tab 切換事件
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-  
   chrome.tabs.get(activeInfo.tabId, function(tab) {
     let url = tab.url;
     console.log("當前標籤頁的 URL：" + tab.url);
@@ -22,10 +20,12 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
     }
   
     if (url.startsWith("https") || url.startsWith("http")) {
-      intervalID = setInterval(connectToCurrentTab, 1000);
-      currentTabId = activeInfo.tabId;
-      port = chrome.tabs.connect(currentTabId);
-      console.log(currentTabId)
+      if (hasTimerStart === false) {
+        intervalID = setInterval(connectToCurrentTab, 1000);
+        currentTabId = activeInfo.tabId;
+        port = chrome.tabs.connect(currentTabId);
+        console.log(currentTabId)
+      }
     }
   });
 });
@@ -39,10 +39,7 @@ function connectToCurrentTab() {
 }
 
 
-
-
-//以上為要用的code 勿刪
-//測試 
+// 當tab跳轉到網頁時開始計時
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {  
     if (currentTabId != tabId) {
         currentTabId = tabId
