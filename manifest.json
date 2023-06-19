@@ -1,6 +1,6 @@
 {
-  "name": "Tab Capture Example",
-  "description": "Capture a tab and play in a <video> element in a separate window.",
+  "name": "Distract clock",
+  "description": "Remind you, when you getting Distract",
   "version": "1",
   "manifest_version": 3,
   "action": {

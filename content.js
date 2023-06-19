@@ -70,7 +70,7 @@ chrome.runtime.onConnect.addListener(function(port){
         //phase3
         if (response.msg > 900) {
             if (phase3 === false) {
-            append_bubble3("content", "你分心了15分鐘")
+            append_bubble3("content", "你已經分心了15分鐘")
             }
         }
         

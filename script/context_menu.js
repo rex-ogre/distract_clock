@@ -19,7 +19,7 @@ export function linstenOninstalled() {
 chrome.runtime.onInstalled.addListener(function () {
   // Create a radio item.
   chrome.contextMenus.create({
-    title: 'focus',
+    title: 'Focus on this tab',
     type: 'checkbox',
     contexts: ['all'],
     id: 'focus'
