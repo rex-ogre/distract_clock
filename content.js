@@ -58,19 +58,19 @@ chrome.runtime.onConnect.addListener(function(port){
         //phase 1
         if (response.msg > 300) {
             if (phase1 === false) {
-            append_bubble("content", "你分心了")
+            append_bubble("content", "You are getting distract")
             }
         }
         //phase 2 
         if (response.msg > 600) {
             if (phase2 === false) {
-            append_bubble2("content", "你真的分心了")
+            append_bubble2("content", "You really getting distract")
             }
         }
         //phase3
         if (response.msg > 900) {
             if (phase3 === false) {
-            append_bubble3("content", "你已經分心了15分鐘")
+            append_bubble3("content", "幹 你要分心多久")
             }
         }
         

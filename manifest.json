@@ -10,7 +10,7 @@
     "service_worker": "service-worker.js",
     "type" : "module"
   },
-  "permissions": ["tabs", "tabCapture", "activeTab", "contextMenus"],
+  "permissions": ["tabs", "activeTab", "contextMenus"],
   "icons": {
     "16": "./images/icon-16.png",
     "48": "./images/icon-48.png",

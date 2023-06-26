@@ -25,39 +25,46 @@
     font-size: 20px;
   }
   .bubble {
-    --r: 25px; /* the radius */
     --t: 30px; /* the size of the tail */
     animation: fadeIn 3s ease forwards;
     max-width: 300px;
-    padding: calc(2*var(--r)/3);
-    -webkit-mask: 
-      radial-gradient(var(--t) at var(--_d) 0,#0000 98%,#000 102%) 
-        var(--_d) 100%/calc(100% - var(--r)) var(--t) no-repeat,
-      conic-gradient(at var(--r) var(--r),#000 75%,#0000 0) 
-        calc(var(--r)/-2) calc(var(--r)/-2) padding-box, 
-      radial-gradient(50% 50%,#000 98%,#0000 101%) 
-        0 0/var(--r) var(--r) space padding-box;
-    background: blue;
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color:rgb(8, 127, 254);
+    color: white;
+    margin-right: 8px;
+    border-left: 0.5em solid rgb(8, 127, 254);
+    border-bottom-left-radius: 1em 0.5em;
+    border-radius: 1.5em;
+    height: 6vh;
+  }
+  .bubble ::after {
+      content: "";
+      position: absolute;
+      right: -1.7em;
+      bottom: 0;
+      width: 0.5em;
+      height: 1em;
+      border-left: 0.5em solid rgb(8, 127, 254);
+      border-bottom-left-radius: 1em 0.5em;
   
-    height: 100vh; 
   }
   .left {
     --_d: 0%;
     border-left: var(--t) solid #0000;
     margin-right: var(--t);
     place-self: start;
+    border-bottom-right-radius: 90px;
   }
   .right {
     --_d: 100%;
     border-right: var(--t) solid #0000;
-    height: 5vh;
-    z-index: 999;
+    margin-left: var(--t);
+    place-self: end;
   }
   .content {
+    padding-left: 3px;
     text-align: center;
   }
   

@@ -1,15 +1,15 @@
 import {focused, genericOnClick, linstenOninstalled}from './script/context_menu.js';
-
+import { Timer } from './model/timer.js';
 chrome.contextMenus.onClicked.addListener(genericOnClick);
 linstenOninstalled();
 //變數
 let focusTabId = null
 let currentTabId = null // 存儲當前活動的 tab 的 ID
-let timer = 0
+let timer = new Timer(0)
 let port = null
 let intervalID = null
-let hasTimerStart = false
 
+//defineProperty
 Object.defineProperty(chrome.windows, 'focused', {
   get: getFocused,
   set: setMyVariable
@@ -17,15 +17,17 @@ Object.defineProperty(chrome.windows, 'focused', {
 function getFocused() {
   return focused;
 }
-
 function setMyVariable(value) {
   if (value === false) {
     focusTabId = null
-    clearInterval(intervalID)
   } else {
     focusTabId = currentTabId
   }
+  timer.stopTimer()
 }
+
+
+
 
 // 監聽 active tab 切換事件
 chrome.tabs.onActivated.addListener(function(activeInfo) {
@@ -44,20 +46,18 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
       default:
         let url = tab.url;
         console.log("當前標籤頁的 URL：" + tab.url);
-        timer = 0
+        timer.resetTime()
         //如果先前已建立連接，要斷開
         if (currentTabId && port) {
-          hasTimerStart = false
           port.disconnect()
-          clearInterval(intervalID)
+          timer.startTimer(connectToCurrentTab)
         }
         if (url.startsWith("https") || url.startsWith("http")) {
-          if (hasTimerStart === false) {
-            intervalID = setInterval(connectToCurrentTab, 1000);
+          timer.startTimer(connectToCurrentTab)
             currentTabId = activeInfo.tabId;
             port = chrome.tabs.connect(currentTabId);
             console.log(currentTabId)
-          }
+          
         }
     }
   });
@@ -65,10 +65,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
 // 建立連結後的開始跑回圈
 function connectToCurrentTab() {
-    hasTimerStart = true
-    timer += 1
-    port.postMessage({msg:timer})
-  
+    timer.plusTime()
+    if (port && port.sender && port.sender.tab ) {
+      port.postMessage({ msg: timer.getTime });
+    } else {
+      port = chrome.tabs.connect(currentTabId);
+      port.postMessage({ msg: timer.getTime });
+      
+    }
 }
 
 // 當tab跳轉到網頁時開始計時
@@ -86,11 +90,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     default:
       if (currentTabId != tabId) {
         currentTabId = tabId
-        timer = 0
+        timer.resetTime()
         if (currentTabId && port) {
           port.disconnect()
-          hasTimerStart = false
-          clearInterval(intervalID)
+          timer.stopTimer()
         }
     }
 
@@ -98,9 +101,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
       switch (changeInfo.status) {
         case "complete":
             console.log("conmplete")
-            if (hasTimerStart === false) {
-            intervalID = setInterval(connectToCurrentTab, 1000);
-            }
+            timer.startTimer(connectToCurrentTab)
           currentTabId = tabId;
           port = chrome.tabs.connect(currentTabId);
         default:
