@@ -4,23 +4,28 @@
   "version": "1",
   "manifest_version": 3,
   "action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon.png",
+    "default_popup": "popup/popup.html"
+    
   },
+
   "background": {
     "service_worker": "service-worker.js",
     "type" : "module"
   },
-  "permissions": ["tabs", "activeTab", "contextMenus"],
+  "permissions": ["tabs", "contextMenus"],
   "icons": {
     "16": "./images/icon-16.png",
     "48": "./images/icon-48.png",
     "128": "./images/icon-128.png"
+    
   },
   "content_scripts": [
     {
       "js": ["content.js"],
       "css": ["index.scss"],
-      "matches": ["https://*/*",
+      "matches": [
+      "https://*/*",
       "http://*/*"
     ]
     }
