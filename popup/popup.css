@@ -1,24 +1,23 @@
 body {
   width: 20rem;
-}
-
-ul {
-  list-style-type: none;
-  padding-inline-start: 0;
-  margin: 1rem 0;
-}
-
-li {
-  padding: 0.25rem;
-}
-li:nth-child(odd) {
-  background: #80808030;
-}
-li:nth-child(even) {
-  background: #ffffff;
-}
-
-h3,
-p {
+  background-color: rgba(54, 65, 83, 1);
+  height: 34rem;
   margin: 0;
 }
+.header_area {
+  background-color: rgba(26, 32, 44, 1);
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: center;    
+  align-content: center;      
+  flex-wrap: wrap;
+}
+.header {
+  background-color: rgba(26, 32, 44, 1);
+  font-size: large;
+  color: white;
+  text-align: center;
+  font-size: 3em; 
+}
+  
