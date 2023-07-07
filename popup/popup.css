@@ -3,6 +3,9 @@ body {
   background-color: rgba(54, 65, 83, 1);
   height: 34rem;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .header_area {
   background-color: rgba(26, 32, 44, 1);
@@ -20,4 +23,23 @@ body {
   text-align: center;
   font-size: 3em; 
 }
-  
+.tab_icon {
+  margin: 10px;
+}
+.timer {
+  font-size: large;
+  color: rgba(96, 92, 255, 1);
+}  
+ul {
+  list-style-type: none;
+  overflow: scroll;
+}
+li {
+  font-size : 2em;
+  margin: 1em 0;
+  color: white;
+}
+li > *{
+display: inline-block;
+vertical-align: middle;
+}
