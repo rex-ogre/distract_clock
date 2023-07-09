@@ -19,7 +19,7 @@ export function linstenOninstalled() {
     // Create a radio item.
     chrome.contextMenus.create({
       title: "Focus on this tab",
-      type: "checkbox",
+      type: "normal",
       contexts: ["all"],
       id: "focus",
     });

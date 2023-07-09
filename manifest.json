@@ -13,7 +13,7 @@
     "service_worker": "service-worker.js",
     "type" : "module"
   },
-  "permissions": ["tabs", "contextMenus"],
+  "permissions": ["tabs", "contextMenus","tabGroups"],
   "icons": {
     "16": "./images/icon-16.png",
     "48": "./images/icon-48.png",
@@ -25,8 +25,9 @@
       "js": ["content.js"],
       "css": ["index.scss"],
       "matches": [
-      "https://*/*",
-      "http://*/*"
+      // "https://*/*",
+      // "http://*/*"
+      "<all_urls>"
     ]
     }
   ],
