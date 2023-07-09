@@ -72,8 +72,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   switch (changeInfo.status) {
     case "complete":
       console.log("conmplete");
-      timer.startTimer(connectToCurrentTab);
-      port = chrome.tabs.connect(tabId);
+      if (focusGroup.length !== 0 && !focusGroup.includes(tab.id)) {
+        //如果先前已建立連接，要斷開
+        if (port) {
+          port.disconnect();
+        }
+        port = chrome.tabs.connect(tab.id);
+        timer.startTimer(connectToCurrentTab);
+      }
     default:
       break;
   }
@@ -86,3 +92,5 @@ chrome.tabs.onRemoved.addListener(function (id, removeInfo) {
     focusGroup.splice(index, 1);
   }
 });
+
+
