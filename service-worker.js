@@ -26,6 +26,7 @@ function setMyVariable(value) {
   focusGroup.push(currentTabId);
   chrome.tabs.group({ tabIds: focusGroup }, function (group) {
     // 將分頁加入群組
+    chrome.tabGroups.update(group, { title: "Focus group" });
   });
   timer.stopTimer();
 }
