@@ -95,3 +95,29 @@ chrome.tabs.onRemoved.addListener(function (id, removeInfo) {
 });
 
 
+var popport = null;
+
+// 監聽與彈出式視窗的連接請求
+chrome.runtime.onConnect.addListener(function(port) {
+  console.log("Connected to popup.js");
+
+  // 儲存連接的 port 物件
+  popport = port;
+
+  // 接收來自彈出式視窗的訊息
+  popport.onMessage.addListener(function(message) {
+    console.log("Message received from popup.js: ", message);
+
+    // 做一些處理...
+
+    // 回傳訊息給彈出式視窗
+    popport.postMessage({ message: "Response from background.js" });
+  });
+
+  // 彈出式視窗斷開連接時處理
+  port.onDisconnect.addListener(function() {
+    console.log("Disconnected from popup.js");
+
+    // 做一些處理...
+  });
+});
