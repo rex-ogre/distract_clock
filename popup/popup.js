@@ -61,6 +61,8 @@ chrome.runtime.onConnect.addListener(function(port) {
             var image = document.createElement("img");
             image.setAttribute('src', tabList[i].favicon);
             image.setAttribute('class','tab_icon');
+            image.setAttribute('width',"32px")
+            image.setAttribute('height',"32px")
             li.appendChild(image);
             var p = document.createElement("p");
             li.appendChild(p)

@@ -29,6 +29,7 @@ body {
 }
 ul {
   list-style-type: none;
+  height: 220px;
   overflow: scroll;
 }
 li {
