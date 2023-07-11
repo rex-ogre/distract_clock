@@ -32,7 +32,7 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["https://*/*"]
+    "matches": ["<all_urls>"]
   }
 
 }

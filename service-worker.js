@@ -26,7 +26,7 @@ function setMyVariable(value) {
   focusGroup.push(currentTabId);
   chrome.tabs.group({ tabIds: focusGroup }, function (group) {
     // 將分頁加入群組
-    chrome.tabGroups.update(group, { title: "Focus group" });
+    chrome.tabGroups.update(group, { title: "Focus group",color:"pink" });
   });
   timer.stopTimer();
 }
@@ -95,15 +95,14 @@ chrome.tabs.onRemoved.addListener(function (id, removeInfo) {
 });
 
 
+
 var popport = null;
 
 // 監聽與彈出式視窗的連接請求
 chrome.runtime.onConnect.addListener(function(port) {
-  console.log("Connected to popup.js");
 
   // 儲存連接的 port 物件
   popport = port;
-
   // 接收來自彈出式視窗的訊息
   popport.onMessage.addListener(function(message) {
     console.log("Message received from popup.js: ", message);

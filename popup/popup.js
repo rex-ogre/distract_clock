@@ -1,5 +1,9 @@
-
+import { TabInfo } from "../model/tabInfo.js";
 console.log("popup.js")
+let tabList = [];
+
+
+
 
 // 在 popup.js 中建立與 background.js 的連接
 chrome.runtime.onConnect.addListener(function(port) {
@@ -34,4 +38,37 @@ chrome.runtime.onConnect.addListener(function(port) {
       port.disconnect(); // 手動斷開連接
     });
   });
+  
+
+  // chrome.tabs.query({currentWindow: true}, function(tabs) {
+
+    chrome.tabGroups.query({ title: "Focus group",color: "pink" }, function(group){
+      chrome.tabs.query({currentWindow: true}, function(tabs) {
+      const id = group[0].id
+      tabs.forEach(function(tab) {
+        if (tab.groupId === id) {
+        var title = tab.title;
+        var favicon = tab.favIconUrl;
+        let tabInfo = new TabInfo(title,favicon)
+        console.log("我看看favicon",favicon)
+        tabList.push(tabInfo)
+        }
+      })
+      
+          let list = document.querySelector(".tab_list")
+          for (var i = 0; i < tabList.length; i++) {
+            var li = document.createElement("li");
+            var image = document.createElement("img");
+            image.setAttribute('src', tabList[i].favicon);
+            image.setAttribute('class','tab_icon');
+            li.appendChild(image);
+            var p = document.createElement("p");
+            li.appendChild(p)
+            p.textContent = tabList[i].title;
+            list.append(li)
+          }
+      
+      });
+    })
+
   
