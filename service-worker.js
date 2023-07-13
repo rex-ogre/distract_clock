@@ -9,9 +9,12 @@ chrome.contextMenus.onClicked.addListener(genericOnClick);
 linstenOninstalled();
 //變數
 let currentTabId = null; // 存儲當前活動的 tab 的 ID
-let port = null;
+let contentPort = null;
+let popPort = null;
+let popTimeInterval = null;
 let timer = new Timer(0);
 let focusGroup = [];
+const key = "timerStatus";
 //defineProperty
 Object.defineProperty(chrome.windows, "focused", {
   get: getFocused,
@@ -38,12 +41,12 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
     if (focusGroup.length !== 0 && !focusGroup.includes(tab.id)) {
       //如果先前已建立連接，要斷開
-      if (port) {
-        port.disconnect();
+      if (contentPort) {
+        contentPort.disconnect();
         timer.startTimer(connectToCurrentTab);
       }
       timer.startTimer(connectToCurrentTab);
-      port = chrome.tabs.connect(tab.id);
+      contentPort = chrome.tabs.connect(tab.id);
     } else if (focusGroup.length !== 0 && focusGroup.includes(tab.id)) {
       timer.resetTime();
       timer.stopTimer();
@@ -54,19 +57,19 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 // 建立連結後的開始跑回圈
 function connectToCurrentTab() {
   timer.plusTime();
-  if (port && port.sender && port.sender.tab) {
-    port.postMessage({ msg: timer.getTime });
+  if (contentPort && contentPort.sender && contentPort.sender.tab) {
+    contentPort.postMessage({ msg: timer.getTime });
   } else {
-    port = chrome.tabs.connect(currentTabId);
-    port.postMessage({ msg: timer.getTime });
+    contentPort = chrome.tabs.connect(currentTabId);
+    contentPort.postMessage({ msg: timer.getTime });
   }
 }
 
 // 當tab跳轉到網頁時開始計時
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   currentTabId = tabId;
-  if (port) {
-    port.disconnect();
+  if (contentPort) {
+    contentPort.disconnect();
     timer.stopTimer();
   }
 
@@ -75,10 +78,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       console.log("conmplete");
       if (focusGroup.length !== 0 && !focusGroup.includes(tab.id)) {
         //如果先前已建立連接，要斷開
-        if (port) {
-          port.disconnect();
+        if (contentPort) {
+          contentPort.disconnect();
         }
-        port = chrome.tabs.connect(tab.id);
+        contentPort = chrome.tabs.connect(tab.id);
         timer.startTimer(connectToCurrentTab);
       }
     default:
@@ -95,28 +98,36 @@ chrome.tabs.onRemoved.addListener(function (id, removeInfo) {
 });
 
 
-
-var popport = null;
-
-// 監聽與彈出式視窗的連接請求
 chrome.runtime.onConnect.addListener(function(port) {
+  popPort = port;
 
-  // 儲存連接的 port 物件
-  popport = port;
-  // 接收來自彈出式視窗的訊息
-  popport.onMessage.addListener(function(message) {
-    console.log("Message received from popup.js: ", message);
-
+  function sendTime() {
+    popPort.postMessage({ message: timer.getTime });
+  }
+  popTimeInterval = setInterval(sendTime, 1000);
+  popPort.onMessage.addListener(function(message) {
     // 做一些處理...
-
     // 回傳訊息給彈出式視窗
-    popport.postMessage({ message: "Response from background.js" });
   });
 
   // 彈出式視窗斷開連接時處理
   port.onDisconnect.addListener(function() {
-    console.log("Disconnected from popup.js");
-
+    clearInterval(popTimeInterval);
+    popTimeInterval = null;
     // 做一些處理...
   });
+});
+
+
+// 先检查之前是否已经设置过相同的键
+chrome.storage.local.get(key, function(result) {
+  if (result[key] !== undefined) {
+    // 键已经存在，进行相应的处理
+    console.log("Key already exists:", key);
+  } else {
+    // 键不存在，可以设置新值
+    chrome.storage.local.set({ [key]: true }, function() {
+      console.log("Value set for key:", key);
+    });
+  }
 });

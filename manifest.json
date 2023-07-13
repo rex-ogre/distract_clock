@@ -13,7 +13,7 @@
     "service_worker": "service-worker.js",
     "type" : "module"
   },
-  "permissions": ["tabs", "contextMenus","tabGroups"],
+  "permissions": ["tabs", "contextMenus","tabGroups","storage"],
   "icons": {
     "16": "./images/icon-16.png",
     "48": "./images/icon-48.png",

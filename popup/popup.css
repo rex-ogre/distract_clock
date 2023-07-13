@@ -31,11 +31,20 @@ ul {
   list-style-type: none;
   height: 220px;
   overflow: scroll;
+  margin: 20;
+  padding: 20;
 }
+
 li {
-  font-size: 2em;
-  margin: 1em 0;
+  white-space: nowrap; 
+  font-size: 1.5em;
   color: white;
+}
+
+li::after {
+  content: "";
+  display: inline-block;
+  width: 20px; /* 右侧内边距的大小，可根据需要调整 */
 }
 li > * {
   display: inline-block;
