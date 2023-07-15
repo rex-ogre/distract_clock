@@ -1,11 +1,11 @@
 import { TabInfo } from "../model/tabInfo.js";
 console.log("popup.js");
 let tabList = [];
-
+const key = "timerStatus";
+setPlayIcon();
 // 在 popup.js 中建立與 background.js 的連接
 chrome.runtime.onConnect.addListener(function (port) {
   console.log("Connected to background.js");
-
   // 接收來自 background.js 的訊息
   port.onMessage.addListener(function (msg) {
     console.log("Message received from background.js: ");
@@ -76,14 +76,42 @@ chrome.tabGroups.query(
   }
 );
 
-const key = "timerStatus";
+chrome.storage.sync.get(key, function (result) {
+  let status = null;
+  let playIcon = document.querySelector("#play_icon");
+  status = result[key];
+  result[key] === true
+    ? (playIcon.src = "../images/stop.png")
+    : (playIcon.src = "../images/play.png");
+
+  console.log(result[key], "我看看情況");
+});
+
 function setPlayIcon() {
-  let playIcon = document.querySelector("#play_icon")
-  chrome.storage.local.get(key, function(result) {
-    if (result[key] === true) {
-      playIcon.src = "../images/play.png"
-    } else {
-      playIcon.src = "../images/stop.png"
-    }
+  let playIcon = document.querySelector("#play_icon");
+  playIcon.addEventListener("click", function (event) {
+    chrome.storage.sync.get(key, function (result) {
+      let status = result[key]; // 获取最新的存储值
+      chrome.storage.sync.set({ [key]: !status }).then(function () {
+        console.log("Value updated successfully");
+        status = !status;
+        console.log(status);
+        if (status === true) {
+          playIcon.src = "../images/stop.png";
+        } else {
+          playIcon.src = "../images/play.png";
+        }
+      });
+    });
   });
 }
+
+//監聽改變的部分
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    console.log(
+      `Storage key "${key}" in namespace "${namespace}" changed.`,
+      `Old value was "${oldValue}", new value is "${newValue}".`
+    );
+  }
+});

@@ -29,7 +29,7 @@ function setMyVariable(value) {
   focusGroup.push(currentTabId);
   chrome.tabs.group({ tabIds: focusGroup }, function (group) {
     // 將分頁加入群組
-    chrome.tabGroups.update(group, { title: "Focus group",color:"pink" });
+    chrome.tabGroups.update(group, { title: "Focus group", color: "pink" });
   });
   timer.stopTimer();
 }
@@ -56,13 +56,17 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
 // 建立連結後的開始跑回圈
 function connectToCurrentTab() {
-  timer.plusTime();
-  if (contentPort && contentPort.sender && contentPort.sender.tab) {
-    contentPort.postMessage({ msg: timer.getTime });
-  } else {
-    contentPort = chrome.tabs.connect(currentTabId);
-    contentPort.postMessage({ msg: timer.getTime });
-  }
+  chrome.storage.sync.get(key, function (result) {
+    if (result[key] === true) {
+      timer.plusTime();
+      if (contentPort && contentPort.sender && contentPort.sender.tab) {
+        contentPort.postMessage({ msg: timer.time });
+      } else {
+        contentPort = chrome.tabs.connect(currentTabId);
+        contentPort.postMessage({ msg: timer.time });
+      }
+    }
+  });
 }
 
 // 當tab跳轉到網頁時開始計時
@@ -97,36 +101,34 @@ chrome.tabs.onRemoved.addListener(function (id, removeInfo) {
   }
 });
 
-
-chrome.runtime.onConnect.addListener(function(port) {
+chrome.runtime.onConnect.addListener(function (port) {
   popPort = port;
 
   function sendTime() {
-    popPort.postMessage({ message: timer.getTime });
+    popPort.postMessage({ message: timer.time });
   }
   popTimeInterval = setInterval(sendTime, 1000);
-  popPort.onMessage.addListener(function(message) {
+  popPort.onMessage.addListener(function (message) {
     // 做一些處理...
     // 回傳訊息給彈出式視窗
   });
 
   // 彈出式視窗斷開連接時處理
-  port.onDisconnect.addListener(function() {
+  port.onDisconnect.addListener(function () {
     clearInterval(popTimeInterval);
     popTimeInterval = null;
     // 做一些處理...
   });
 });
 
-
 // 先检查之前是否已经设置过相同的键
-chrome.storage.local.get(key, function(result) {
+chrome.storage.sync.get(key, function (result) {
   if (result[key] !== undefined) {
     // 键已经存在，进行相应的处理
-    console.log("Key already exists:", key);
+    console.log("Key already exists:", key,result[key]);
   } else {
     // 键不存在，可以设置新值
-    chrome.storage.local.set({ [key]: true }, function() {
+    chrome.storage.sync.set({ [key]: true }, function () {
       console.log("Value set for key:", key);
     });
   }

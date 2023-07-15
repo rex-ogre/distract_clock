@@ -1,12 +1,12 @@
 export class Timer {
   constructor(time) {
-    this.time = time;
+    this._time = time;
     this.intervalID = null;
   }
 
   // Getter
-  get getTime() {
-    return this.time;
+  get time() {
+    return this._time;
   }
 
   // Method
@@ -20,9 +20,9 @@ export class Timer {
     this.intervalID = null;
   }
   plusTime() {
-    this.time += 1;
+    this._time += 1;
   }
   resetTime() {
-    this.time = 0;
+    this._time = 0;
   }
 }
