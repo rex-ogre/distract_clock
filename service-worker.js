@@ -9,7 +9,6 @@ chrome.contextMenus.onClicked.addListener(genericOnClick);
 linstenOninstalled();
 //變數
 let currentTabId = null; // 存儲當前活動的 tab 的 ID
-let contentPort = null;
 let popPort = null;
 let popTimeInterval = null;
 let timer = new Timer(0);
@@ -44,12 +43,10 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
     if (focusGroup.length !== 0 && !focusGroup.includes(tab.id)) {
       //如果先前已建立連接，要斷開
-      if (contentPort) {
-        contentPort.disconnect();
-        timer.startTimer(connectToCurrentTab);
-      }
+
       timer.startTimer(connectToCurrentTab);
-      contentPort = chrome.tabs.connect(tab.id);
+
+      timer.startTimer(connectToCurrentTab);
     } else if (focusGroup.length !== 0 && focusGroup.includes(tab.id)) {
       timer.resetTime();
       timer.stopTimer();
@@ -62,12 +59,7 @@ function connectToCurrentTab() {
   chrome.storage.sync.get(key, function (result) {
     if (result[key] === true) {
       timer.plusTime();
-      if (contentPort && contentPort.sender && contentPort.sender.tab) {
-        contentPort.postMessage({ msg: timer.time });
-      } else {
-        contentPort = chrome.tabs.connect(currentTabId);
-        contentPort.postMessage({ msg: timer.time });
-      }
+
       //跳通知
       if (timer.time > 300 && phase1 === false) {
         phase1 = true;
@@ -108,20 +100,12 @@ function connectToCurrentTab() {
 // 當tab跳轉到網頁時開始計時
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   currentTabId = tabId;
-  if (contentPort) {
-    contentPort.disconnect();
-    timer.stopTimer();
-  }
-
   switch (changeInfo.status) {
     case "complete":
       console.log("conmplete");
       if (focusGroup.length !== 0 && !focusGroup.includes(tab.id)) {
         //如果先前已建立連接，要斷開
-        if (contentPort) {
-          contentPort.disconnect();
-        }
-        contentPort = chrome.tabs.connect(tab.id);
+
         timer.startTimer(connectToCurrentTab);
       }
     default:
