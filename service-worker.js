@@ -15,6 +15,9 @@ let popTimeInterval = null;
 let timer = new Timer(0);
 let focusGroup = [];
 const key = "timerStatus";
+let phase1 = false;
+let phase2 = false;
+let phase3 = false;
 //defineProperty
 Object.defineProperty(chrome.windows, "focused", {
   get: getFocused,
@@ -64,6 +67,39 @@ function connectToCurrentTab() {
       } else {
         contentPort = chrome.tabs.connect(currentTabId);
         contentPort.postMessage({ msg: timer.time });
+      }
+      //跳通知
+      if (timer.time > 300 && phase1 === false) {
+        phase1 = true;
+        let options = {
+          type: "basic",
+          title: "Basic Notification",
+          message: "你分心了5分鐘",
+          iconUrl: "../images/stop.png ",
+        };
+        chrome.notifications.create(options);
+      }
+      //phase 2
+      if (timer.time > 600 && phase2 === false) {
+        phase2 = true;
+        let options = {
+          type: "basic",
+          title: "Basic Notification",
+          message: "你分心了10分鐘",
+          iconUrl: "../images/stop.png ",
+        };
+        chrome.notifications.create(options);
+      }
+      //phase3
+      if (timer.time > 900 && phase3 === false) {
+        phase3 = true;
+        let options = {
+          type: "basic",
+          title: "Basic Notification",
+          message: "你分心了15分鐘",
+          iconUrl: "../images/stop.png ",
+        };
+        chrome.notifications.create(options);
       }
     }
   });
@@ -125,7 +161,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 chrome.storage.sync.get(key, function (result) {
   if (result[key] !== undefined) {
     // 键已经存在，进行相应的处理
-    console.log("Key already exists:", key,result[key]);
+    console.log("Key already exists:", key, result[key]);
   } else {
     // 键不存在，可以设置新值
     chrome.storage.sync.set({ [key]: true }, function () {

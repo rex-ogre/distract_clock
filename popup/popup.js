@@ -3,6 +3,7 @@ console.log("popup.js");
 let tabList = [];
 const key = "timerStatus";
 setPlayIcon();
+
 // 在 popup.js 中建立與 background.js 的連接
 chrome.runtime.onConnect.addListener(function (port) {
   console.log("Connected to background.js");
