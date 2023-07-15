@@ -73,7 +73,7 @@ function connectToCurrentTab() {
         phase1 = true;
         let options = {
           type: "basic",
-          title: "Basic Notification",
+          title: "Distract Notification",
           message: "你分心了5分鐘",
           iconUrl: "../images/stop.png ",
         };
@@ -84,7 +84,7 @@ function connectToCurrentTab() {
         phase2 = true;
         let options = {
           type: "basic",
-          title: "Basic Notification",
+          title: "Distract Notification",
           message: "你分心了10分鐘",
           iconUrl: "../images/stop.png ",
         };
@@ -95,7 +95,7 @@ function connectToCurrentTab() {
         phase3 = true;
         let options = {
           type: "basic",
-          title: "Basic Notification",
+          title: "Distract Notification",
           message: "你分心了15分鐘",
           iconUrl: "../images/stop.png ",
         };
